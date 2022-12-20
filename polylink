@@ -1,0 +1,171 @@
+#include<stdio.h>
+#include <stdlib.h>
+struct poly
+{
+    float coeff;
+    int expo1;
+    int expo2;
+    struct poly *next;
+}*newnode,*phead,*qhead,*rhead,*pptr,*qptr,*rptr,*ptr;
+void display(struct poly *head)
+{
+    ptr=head->next;
+    while(ptr->next!=NULL)
+    {
+    	if(ptr->expo2==0)
+    	{
+    		printf("%.2fx^%d+",ptr->coeff,ptr->expo1);
+    	}
+    	else if(ptr->expo1==0)
+    	{
+		printf("%.2fy^%d+",ptr->coeff,ptr->expo2);
+	}
+	else
+	{		
+        	printf("%.2fx^%dy^%d+",ptr->coeff,ptr->expo1,ptr->expo2);
+        }	
+        ptr=ptr->next;
+    }
+    if(ptr->expo1+ptr->expo2>0)
+    {
+        if(ptr->expo2==0)
+    	{
+    		printf("%.2fx^%d",ptr->coeff,ptr->expo1);
+    	}
+    	else if(ptr->expo1==0)
+    	{
+		printf("%.2fy^%d",ptr->coeff,ptr->expo2);
+	}
+	else
+	{		
+        	printf("%.2fx^%dy^%d",ptr->coeff,ptr->expo1,ptr->expo2);
+        }
+    }
+    else
+        printf("%.2f",ptr->coeff);
+    printf("\n");
+}
+struct poly * insert(float co,int ex1,int ex2)
+{
+    newnode=(struct poly*)malloc(sizeof(struct poly));
+    newnode->coeff=co;
+    newnode->expo1=ex1;
+    newnode->expo2=ex2;
+    newnode->next=NULL;
+    return(newnode);
+}
+void main()
+{
+    int m,n,i,ex1,ex2;
+    float co;
+    phead=(struct poly*)malloc(sizeof(struct poly));
+    pptr=phead;
+    phead->next=NULL;
+    phead->expo1=0;
+    phead->expo2=0;
+    phead->coeff=0;
+    printf("enter the number of terms in first polynomial");
+    scanf("%d",&n);
+    for(i=0;i<n;i++)
+    {
+        printf("enter the power of x");
+	scanf("%d",&ex1);
+	printf("enter the power of y");
+	scanf("%d",&ex2);
+	printf("enter the coefficient");
+	scanf("%f",&co);
+	newnode=insert(co,ex1,ex2);
+        pptr->next=newnode;
+        pptr=newnode;
+        
+    }
+    qhead=(struct poly*)malloc(sizeof(struct poly));
+    qptr=qhead;
+    qhead->next=NULL;
+    qhead->expo1=0;
+    qhead->expo2=0;
+    qhead->coeff=0;
+    printf("enter the number of terms in second polynomial");
+    scanf("%d",&m);
+    for(i=0;i<m;i++)
+    {
+        printf("enter the power of x");
+	scanf("%d",&ex1);
+	printf("enter the power of y");
+	scanf("%d",&ex2);
+	printf("enter the coefficient");
+	scanf("%f",&co);
+        newnode=insert(co,ex1,ex2);
+        qptr->next=newnode;
+        qptr=newnode;
+    }
+    printf("\nthe first polynomial is ");
+    display(phead);
+    printf("\nthe second polynomial is ");
+    display(qhead);
+    pptr=phead->next;
+    qptr=qhead->next;
+    rhead=(struct poly*)malloc(sizeof(struct poly));
+    rhead->next=NULL;
+    rhead->expo1=0;
+    rhead->expo2=0;
+    rhead->coeff=0;
+    rptr=rhead;
+    while(pptr!=NULL&&qptr!=NULL)
+    {
+        if(pptr->expo1==qptr->expo1&&pptr->expo2==qptr->expo2)
+        {
+            rptr->next=insert(pptr->coeff+qptr->coeff,pptr->expo1,pptr->expo2);
+            rptr=rptr->next;
+            pptr=pptr->next;
+            qptr=qptr->next;
+        }
+        else
+        {
+		if(pptr->expo1+pptr->expo2==qptr->expo1+qptr->expo2)
+		{
+			if(pptr->expo1>qptr->expo1)
+			{
+				rptr->next=insert(pptr->coeff,pptr->expo1,pptr->expo2);
+            			rptr=rptr->next;
+            			pptr=pptr->next;
+			}
+			else
+			{
+				rptr->next=insert(qptr->coeff,qptr->expo1,qptr->expo2);
+        			rptr=rptr->next;
+        			qptr=qptr->next;
+			}
+		}
+		else
+		{
+			if(pptr->expo1+pptr->expo2>qptr->expo1+qptr->expo2)
+			{
+				rptr->next=insert(pptr->coeff,pptr->expo1,pptr->expo2);
+            			rptr=rptr->next;
+            			pptr=pptr->next;
+            		}
+            		else
+            		{
+            			rptr->next=insert(qptr->coeff,qptr->expo1,qptr->expo2);
+        			rptr=rptr->next;
+        			qptr=qptr->next;
+        		}
+        	}			
+        }
+    }
+    while(pptr!=NULL)
+    {
+        rptr->next=insert(pptr->coeff,pptr->expo1,pptr->expo2);
+        rptr=rptr->next;
+        pptr=pptr->next;
+    }
+    while(qptr!=NULL)
+    {
+        rptr->next=insert(qptr->coeff,qptr->expo1,qptr->expo2);
+        rptr=rptr->next;
+        qptr=qptr->next;
+    }
+    printf("\nthe sum of polynomials is ");
+    display(rhead);
+}
