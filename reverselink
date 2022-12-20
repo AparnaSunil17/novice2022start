@@ -1,0 +1,72 @@
+#include<stdio.h>
+int f=-1,r=-1,q[10],top=-1,item,stack[10];
+void display()
+ {
+  int i;
+  for(i=f;i<=r;i++)
+  {
+    printf("%d",q[i]);
+  }
+  printf("\n");
+ }
+ 
+ void enqueue(int item)
+ {
+   if(f==-1)
+    {
+     f=0;
+    }
+   q[++r]=item;
+ }
+ int dequeue()
+ {
+  int item;
+  item=q[f];
+  if(f==r)
+    f=r=-1;
+   else
+     f=f+1;
+     return item;
+ }     
+ 
+ void push(int item;)
+ {
+  top++;
+  stack[top]=item;
+  }
+  
+  
+  int pop()
+  {
+    item=stack[top];
+    top--;
+    return item;
+  }
+  
+  
+  void main()
+  {
+    int i,maxsize;
+    printf("Enter the size of the queue");
+    scanf("%d",&maxsize);
+    for(i=0;i<maxsize;i++)
+     {
+       printf("\n The enter the element to be pushed into the queue");
+       scanf("%d",&item);
+       enqueue(item);
+     }
+     printf("\n The entered queue is:");
+     display();
+     while(f!=-1)
+     {
+      item=dequeue();
+      push(item);
+     }
+     while(top!=-1)
+      {
+        item=pop();
+        enqueue(item);
+      }
+      printf("The reversed queue is:");
+      display();
+  }               
